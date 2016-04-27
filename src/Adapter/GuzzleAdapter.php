@@ -11,6 +11,7 @@ use GuzzleHttp\Message\Response;
 /**
  * @author Daniel Badura <d.m.badura@googlemail.com>
  * @author David Badura <d.a.badura@gmail.com>
+ * @author Viktor Jelínek <vikijel@gmail.com>
  */
 class GuzzleAdapter implements AdapterInterface
 {
@@ -24,21 +25,25 @@ class GuzzleAdapter implements AdapterInterface
      */
     protected $options;
 
-    /**
-     * @param string $url
-     * @param string $identifier username or api-token
-     * @param string $password
-     */
-    public function __construct($url, $identifier, $password = null)
+	/**
+	 * @param string $url
+	 * @param string $identifier username or api-token
+	 * @param string $password
+	 * @param array  $options Options for guzzle
+	 */
+    public function __construct($url, $identifier, $password = null, array $options = [])
     {
         $this->guzzle = new Guzzle(['base_url' => $url]);
 
-        $this->options = [
-            'auth' => [$identifier, $password],
-            'headers' => [
-                'Content-Type' => 'application/json'
-            ]
-        ];
+        $this->options = array_merge(
+			[
+				'auth' => [$identifier, $password],
+				'headers' => [
+					'Content-Type' => 'application/json'
+				]
+			],
+			$options
+		);
     }
 
     /**

@@ -9,31 +9,35 @@ use DanielBadura\Redmine\Api\Client;
 
 /**
  * @author David Badura <badura@simplethings.de>
+ * @author Viktor Jelínek <vikijel@gmail.com>
  */
 abstract class ClientTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var Client
-     */
-    protected $client;
+	/**
+	 * @var Client
+	 */
+	protected $client;
 
-    /**
-     *
-     */
-    public function setUp()
-    {
-        if (getenv('REDMINE_URL') && getenv('REDMINE_USER')) {
-            $guzzle  = new GuzzleAdapter(getenv('REDMINE_URL'), getenv('REDMINE_USER'), getenv('REDMINE_PASSWORD'));
-            $adapter = new DummyRecordAdapter($this->getFixtureFolder(), $guzzle);
-        } else {
-            $adapter = new DummyAdapter($this->getFixtureFolder());
-        }
+	/**
+	 *
+	 */
+	public function setUp()
+	{
+		if (getenv('REDMINE_URL') && getenv('REDMINE_USER'))
+		{
+			$guzzle  = new GuzzleAdapter(getenv('REDMINE_URL'), getenv('REDMINE_USER'), getenv('REDMINE_PASSWORD'), ['verify' => getenv('REDMINE_VERIFY') ?: false]);
+			$adapter = new DummyRecordAdapter($this->getFixtureFolder(), $guzzle);
+		}
+		else
+		{
+			$adapter = new DummyAdapter($this->getFixtureFolder());
+		}
 
-        $this->client = new Client($adapter);
-    }
+		$this->client = new Client($adapter);
+	}
 
-    protected function getFixtureFolder()
-    {
-        return __DIR__ . '/fixtures';
-    }
+	protected function getFixtureFolder()
+	{
+		return __DIR__ . '/fixtures';
+	}
 }
